@@ -1,35 +1,68 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+function getRandomIntInclusive(min, max) {
+  const minCeiled = Math.ceil(min);
+  const maxFloored = Math.floor(max);
+  return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled); // The maximum is inclusive and the minimum is inclusive
 }
 
-export default App
+const initialState = [
+  { text: 'If it hurts, do it more often.', upvotes: 0 },
+  {
+    text: 'Adding manpower to a late software project makes it later!',
+    upvotes: 0,
+  },
+  {
+    text: 'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+    upvotes: 0,
+  },
+  {
+    text: 'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+    upvotes: 0,
+  },
+  { text: 'Premature optimization is the root of all evil.', upvotes: 0 },
+  {
+    text: 'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
+    upvotes: 0,
+  },
+  {
+    text: 'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
+    upvotes: 0,
+  },
+  { text: 'The only way to go fast, is to go well.', upvotes: 0 },
+];
+
+const App = () => {
+  const [anecdotes, setAnecdotes] = useState(initialState);
+  const [selected, setSelected] = useState(0);
+  const mostVotesAnecdote = [...anecdotes].sort(
+    (a, b) => b.upvotes - a.upvotes
+  )[0];
+
+  const handleNextAndecdote = () => {
+    const nextIndex = getRandomIntInclusive(0, anecdotes.length - 1);
+    setSelected(nextIndex);
+  };
+
+  const handleUpvote = () => {
+    const nextAnecdotes = [...anecdotes];
+    nextAnecdotes[selected].upvotes += 1;
+    setAnecdotes(nextAnecdotes);
+  };
+
+  return (
+    <div>
+      <h2>Anecdote of the day</h2>
+      <p>{anecdotes[selected].text}</p>
+      <p>has {anecdotes[selected].upvotes} upvotes</p>
+      <button onClick={handleUpvote}>vote</button>
+      <button onClick={handleNextAndecdote}>next annecdote</button>
+
+      <h2>Anecdote with most votes</h2>
+      <p>{mostVotesAnecdote.text}</p>
+      <p>has {mostVotesAnecdote.upvotes} upvotes</p>
+    </div>
+  );
+};
+
+export default App;
